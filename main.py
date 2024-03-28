@@ -139,9 +139,9 @@ try:
                 elif abs(analog_keys[3]) < 0.2:
                     move_axis(0,1)
 
-            #Drawing the joysticks
-            draw_joypad(210,225,(analog_keys[0],analog_keys[1]))
-            draw_joypad(375,225,(analog_keys[2],analog_keys[3]))
+                #Drawing the joysticks
+                draw_joypad(210,225,(analog_keys[0],analog_keys[1]))
+                draw_joypad(375,225,(analog_keys[2],analog_keys[3]))
             
             pygame.display.update()
         pygame.display.flip()
