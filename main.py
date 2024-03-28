@@ -31,8 +31,8 @@ screen = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("R2-D2")
 
 # Init Fonts
-font1 = pygame.font.SysFont("helvetica", 20)
-font2 = pygame.font.SysFont("arial", 30)
+font1 = pygame.font.SysFont("fonts/galbasic.ttf", 24)
+font2 = pygame.font.SysFont("fonts/DS-DIGI.ttf", 30)
 
 # Init Images
 r2d2 = pygame.image.load('images/r2.png')
