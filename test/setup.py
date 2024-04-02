@@ -57,8 +57,8 @@ odrv0.axis1.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
 odrv0.axis1.config.startup_closed_loop_control = True
 
 # Run calibration
-odrv0.axis0.requested_state.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
-odrv0.axis1.requested_state.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+odrv0.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+odrv0.axis1.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
 
 # Start in closed loop
 odrv0.axis0.config.startup_closed_loop_control = True

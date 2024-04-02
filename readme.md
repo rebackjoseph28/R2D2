@@ -4,12 +4,12 @@
 Designed for an ECE 202 sophmore project. Goal is to create a remotely controlled R2-D2, with room for expansion and other functionalities.
 
 ## Parts ##
-Part Name      | Link
+Part Name      | Info
 -------------  | -------------
-Odrive v3.6    | 
-Hoverboard     | 
-Raspberry Pi   | 
-PS4 Controller | 
+Odrive v3.6    | Depreciated, but still work well
+Hoverboard     | any works, make sure to follow the odrive guide
+Raspberry Pi   | We're using a 3B+ but it shouldn't matter
+PS4 Controller | Both on and offbrand ones work
 
 Power system comes from the hoverboard, however it is recommended to add a 24V+ rated relay and a fuse to make sure nothing goes awry.
 
@@ -25,29 +25,30 @@ Mostly you will be using main.py as this contains everything you will need for r
 
 ## Setup ##
 Odrives when they work well are a godsend, however getting them to work was what took most of the time in this project.
+We use the odrive guide on odrive's wiki with some other help. I'll link all guides used for help. 
+
+### Make Sure: ###
+- Odrive Encoders are connected to 3.3V and not 5V, it messes with the signal
+- Odrive firmware worked best on v5.1 with our hall encoder setup
+- Run calibration code, and modify any values per the hoverboard guide
 
 ## Editing the Code ##
 As it stands currently, the code itself very plug and play after setup, the only edit that you want to make is in main.py.
 
-Replace with network info on line 14:
+Change to true when using the odrive, this line was added for testing (line 14):
 ```
 odrv_enable = False
 ```
-This line was added for testing the ui without the odrive connected.
+If you want to see ui without the odrive connected, you can turn it off.
 
 ## Running the code ##
-Make sure you have both an odrive properly connected, and a controller. Specifically for this project we use a PlayStation 4 controller.
+All you need to run is the main.py file, make sure you have the newest version of python and pygame.
 
--> Build Filesystem image
-
--> Upload and Monitor
-
-## Accessing the Webserver ##
-Once you get to this step you should be successfully running your code. In the serial monitor it should tell you what the ESP32's IP address is.
-
-Log into your router, and go to that IP address. If you did everything correctly you should see your website with realtime data.
+## Robot Control ##
+- Controlling the robot is tank controls, so one stick moves one side forward/backward.
+- Any action buttons make noises
+- Playstation button kills the program
+- Shoulder buttons move the turret gears
 
 ## Troubleshooting ##
-- Make sure when you're uploading the code, that you don't have the ports open or else you won't be able to access them.
-- If for whatever reason you need to change filenames make sure you change any references in all the files
-- The ESP32 that I use has 4MB of flash memory which means that any 3D model has to be simplified to fit. Removing chamfers can sometimes save you up to 500kb of data.
+- Nothing yet, you're on your own

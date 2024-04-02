@@ -10,8 +10,9 @@ import time
 import pygame
 import pygame.locals as pgl
 from math import pi
+import platform
 
-odrv_enable = False
+odrv_enable = True
 done = False
 white = (255,255,255)
 amber = (255,141,51)
@@ -44,6 +45,7 @@ pygame.joystick.init()
 joystick = pygame.joystick.Joystick(0)
 joystick.init()
 print("Found controller:", joystick.get_name())
+print("GUID: ", joystick.get_guid())
 
 def draw_button(xpos,ypos,button):
     if button == 0: # X
@@ -91,9 +93,9 @@ def clear_field():
 def move_axis(input,axis):
     if odrv_enable:
         if axis == 0:
-            odrv.axis0.controller.input_vel = 2.0*input
+            odrv.axis0.controller.input_vel = -2.0*input
         if axis == 1:
-            odrv.axis1.controller.input_vel = 2.0*input
+            odrv.axis1.controller.input_vel = -2.0*input
 
 try:
     while not done:
@@ -129,15 +131,15 @@ try:
 
                 # Move Left Motor (Left Stick)
                 if abs(analog_keys[1]) > 0.2:
-                    move_axis(analog_keys[0],0)
+                    move_axis(-analog_keys[1],1)
                 elif abs(analog_keys[1]) < 0.2:
-                    move_axis(0,0)
+                    move_axis(-analog_keys[1],1)
             
                 # Move Right Motor (Right Stick)
                 if abs(analog_keys[3]) > 0.2:
-                    move_axis(analog_keys[3],1)
+                    move_axis(analog_keys[3],0)
                 elif abs(analog_keys[3]) < 0.2:
-                    move_axis(0,1)
+                    move_axis(analog_keys[3],0)
 
                 #Drawing the joysticks
                 draw_joypad(210,225,(analog_keys[0],analog_keys[1]))
