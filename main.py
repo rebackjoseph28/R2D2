@@ -96,6 +96,10 @@ def move_axis(input,axis):
             odrv.axis0.controller.input_vel = -2.0*input
         if axis == 1:
             odrv.axis1.controller.input_vel = -2.0*input
+        if axis == 2:
+             odrv.axis0.controller.input_vel = 0.0
+        if axis == 3:
+            odrv.axis1.controller.input_vel = 0.0
 
 try:
     while not done:
@@ -133,13 +137,13 @@ try:
                 if abs(analog_keys[1]) > 0.2:
                     move_axis(-analog_keys[1],1)
                 elif abs(analog_keys[1]) < 0.2:
-                    move_axis(-analog_keys[1],1)
+                    move_axis(-analog_keys[1],3)
             
                 # Move Right Motor (Right Stick)
                 if abs(analog_keys[3]) > 0.2:
                     move_axis(analog_keys[3],0)
                 elif abs(analog_keys[3]) < 0.2:
-                    move_axis(analog_keys[3],0)
+                    move_axis(analog_keys[3],2)
 
                 #Drawing the joysticks
                 draw_joypad(210,225,(analog_keys[0],analog_keys[1]))
