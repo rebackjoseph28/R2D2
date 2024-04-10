@@ -107,9 +107,9 @@ def clear_field():
 def move_axis(input,axis):
     if odrv_enable:
         if axis == 0:
-            odrv.axis0.controller.input_vel = -2.0*input
+            odrv.axis0.controller.input_vel = -1.5*input
         if axis == 1:
-            odrv.axis1.controller.input_vel = -2.0*input
+            odrv.axis1.controller.input_vel = -1.5*input
         if axis == 2:
              odrv.axis0.controller.input_vel = 0.0
         if axis == 3:
@@ -179,7 +179,7 @@ try:
         #Drawing the joysticks
         draw_joypad(210,225,(analog_keys[laxis0],analog_keys[laxis1]))
         draw_joypad(375,225,(analog_keys[raxis0],analog_keys[raxis1]))
-        pygame.display.update()
+        pygame.display.flip()
 
 except KeyboardInterrupt:
     print("EXITING NOW")
