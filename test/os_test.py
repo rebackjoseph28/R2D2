@@ -1,7 +1,7 @@
 import platform
 import json
 
-buttons = {}
+buttons = json.load(open("joysticks/ps4_keys.json"))
 
 def button_map(filename):
     with open(filename) as json_file:

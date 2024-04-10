@@ -3,20 +3,21 @@ Project by Joey Reback and Cody Saunders
 
 R2-D2 Robot
 '''
-
 import odrive
 from odrive.enums import *
-import time
 import pygame
 import pygame.locals as pgl
 from math import pi
 import platform
+import json
 
-odrv_enable = True
+odrv_enable = False
 done = False
 white = (255,255,255)
 amber = (255,141,51)
 pos_r2d2 = (320,100)
+
+buttons = json.load(open("joysticks/ps4_keys.json"))
 
 analog_keys = {0: 0, 1: 0, 2: 0, 3: 0, 4: -1, 5: -1}
 
@@ -47,6 +48,19 @@ joystick.init()
 print("Found controller:", joystick.get_name())
 print("GUID: ", joystick.get_guid())
 
+def button_map(filename):
+    with open(filename) as json_file:
+        buttons.update(json.load(json_file))
+
+def os_adjust():
+    print("OS: " + platform.system())
+    if (platform.system() == "Windows"):
+        filename = "joysticks/ps4_keys.json"
+    elif (platform.system() == "Linux"):
+        filename = "joysticks/gamepad.json"
+    button_map(filename)
+os_adjust()
+
 def draw_button(xpos,ypos,button):
     if button == 0: # X
         pygame.draw.line(screen, amber, (xpos,ypos),(xpos+15,ypos+20),2)
@@ -59,7 +73,9 @@ def draw_button(xpos,ypos,button):
         pygame.draw.polygon(screen, amber, ((xpos,ypos+25),(xpos+12,ypos),(xpos+25,ypos+25)), 2)
     elif button == 4 or button == 6: # Optn / Share
         pygame.draw.rect(screen, amber, (xpos,ypos,10,30), 2, border_radius=10)
-    elif button == 9 or button == 10: # L1 / L2
+    elif button == 9: # L1
+        pygame.draw.arc(screen, amber, ((xpos,ypos,50,20)),0,pi,2)
+    elif button == 10: # L2
         pygame.draw.arc(screen, amber, ((xpos,ypos,50,20)),0,pi,2)
     elif button == 15: # Touchpad
         pygame.draw.rect(screen, amber, (xpos,ypos,170,75),2, border_radius=10)
@@ -87,8 +103,6 @@ def draw_ui():
 def clear_field():
     pygame.draw.rect(screen,"black",(50,50,500,40))
     pygame.draw.ellipse(screen, "black", (425,120,105,105))
-    pygame.draw.ellipse(screen,"black", (195,210,80,80))
-    pygame.draw.ellipse(screen,"black", (360,210,80,80))
 
 def move_axis(input,axis):
     if odrv_enable:
@@ -102,55 +116,70 @@ def move_axis(input,axis):
             odrv.axis1.controller.input_vel = 0.0
 
 try:
+    #define buttons
+    laxis0 = buttons["leftstick0"]
+    laxis1 = buttons["leftstick1"]
+    raxis0 = buttons["rightstick0"]
+    raxis1 = buttons["rightstick1"]
+    cro = buttons["x"]
+    cir = buttons["circle"]
+    tri = buttons["triangle"]
+    squ = buttons["square"]
+    l1 = buttons["L1"]
+    r1 = buttons["R1"]
+    ps = buttons["PS"]
+
     while not done:
         draw_ui()
         for event in pygame.event.get():
-            clear_field()
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True
             elif event.type == pygame.JOYBUTTONDOWN:
-                if joystick.get_button(0): # X Button
+                if joystick.get_button(cro): # X Button
                     draw_button(470,195,0)
                 
-                if joystick.get_button(1): # O Button
+                if joystick.get_button(cir): # O Button
                     draw_button(500,160,1)
                 
-                if joystick.get_button(2): # Square
+                if joystick.get_button(squ): # Square
                     draw_button(430,160,2)
 
-                if joystick.get_button(3): # Triangle
+                if joystick.get_button(tri): # Triangle
                     draw_button(465,125,3)
 
-                if joystick.get_button(9): # Rotate Head Left
+                if joystick.get_button(l1): # Rotate Head Left
                     draw_button(130,80,9)
 
-                if joystick.get_button(10): # Rotate Head Right
+                if joystick.get_button(r1): # Rotate Head Right
                     draw_button(450,80,10)
 
-                if joystick.get_button(12): # PS Button
+                if joystick.get_button(ps): # PS Button
                     done = True
-                
+                pygame.display.update() 
             elif event.type == pygame.JOYAXISMOTION:
                 analog_keys[event.axis] = event.value
 
                 # Move Left Motor (Left Stick)
-                if abs(analog_keys[1]) > 0.2:
-                    move_axis(-analog_keys[1],1)
-                elif abs(analog_keys[1]) < 0.2:
-                    move_axis(-analog_keys[1],3)
-            
+                if abs(analog_keys[laxis1]) > 0.2:
+                    move_axis(-analog_keys[laxis1],1)
+                elif abs(analog_keys[laxis1]) < 0.2:
+                    move_axis(-analog_keys[laxis1],3)
+                    pygame.draw.ellipse(screen,"black", (195,210,80,80))
+    
                 # Move Right Motor (Right Stick)
-                if abs(analog_keys[3]) > 0.2:
-                    move_axis(analog_keys[3],0)
-                elif abs(analog_keys[3]) < 0.2:
-                    move_axis(analog_keys[3],2)
+                if abs(analog_keys[raxis1]) > 0.2:
+                    move_axis(analog_keys[raxis1],0)
+                elif abs(analog_keys[raxis1]) < 0.2:
+                    move_axis(analog_keys[raxis1],2)
+                    pygame.draw.ellipse(screen,"black", (360,210,80,80))
 
-                #Drawing the joysticks
-                draw_joypad(210,225,(analog_keys[0],analog_keys[1]))
-                draw_joypad(375,225,(analog_keys[2],analog_keys[3]))
-            
-            pygame.display.update()
-        pygame.display.flip()
+            if event.type == pygame.JOYBUTTONUP:
+                clear_field()
+        
+        #Drawing the joysticks
+        draw_joypad(210,225,(analog_keys[laxis0],analog_keys[laxis1]))
+        draw_joypad(375,225,(analog_keys[raxis0],analog_keys[raxis1]))
+        pygame.display.update()
 
 except KeyboardInterrupt:
     print("EXITING NOW")
