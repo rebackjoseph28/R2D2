@@ -11,7 +11,7 @@ from math import pi
 import platform
 import json
 
-odrv_enable = False
+odrv_enable = True
 done = False
 white = (255,255,255)
 amber = (255,141,51)
@@ -155,7 +155,7 @@ try:
 
                 if joystick.get_button(ps): # PS Button
                     done = True
-                pygame.display.update() 
+                pygame.display.flip() 
             elif event.type == pygame.JOYAXISMOTION:
                 analog_keys[event.axis] = event.value
 
