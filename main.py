@@ -33,8 +33,8 @@ screen = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("R2-D2")
 
 # Init Fonts
-font1 = pygame.font.SysFont("fonts/galbasic.ttf", 24)
-font2 = pygame.font.SysFont("fonts/DS-DIGI.ttf", 30)
+font1 = pygame.font.Font("fonts/galbasic.ttf", 24)
+font2 = pygame.font.Font("fonts/DS-DIGI.TTF", 30)
 
 # Init Images
 r2d2 = pygame.image.load('images/r2.png')
@@ -57,7 +57,7 @@ def os_adjust():
     if (platform.system() == "Windows"):
         filename = "joysticks/ps4_keys.json"
     elif (platform.system() == "Linux"):
-        filename = "joysticks/gamepad.json"
+        filename = "joysticks/controller_keys.json"
     button_map(filename)
 os_adjust()
 
