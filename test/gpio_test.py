@@ -1,52 +1,47 @@
-#!/usr/bin/python
-from time import sleep
 import RPi.GPIO as GPIO
+import time
 
-DIR = 20       # Direction GPIO Pin
-STEP = 21      # Step GPIO Pin
-CW = 1         # Clockwise Rotation
-CCW = 0        # Counterclockwise Rotation
-SPR = 200       # Steps per Revolution (360 / 1.8)
+# Define GPIO pins for the A4988 connections
+STEP_PIN = 17
+DIR_PIN = 27
+ENABLE_PIN = 22
 
-GPIO.setwarnings(False)
+# Set up GPIO mode
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(DIR, GPIO.OUT)
-GPIO.setup(STEP, GPIO.OUT)
-GPIO.output(DIR, CW)
 
-MODE = (14, 15, 18) # Microstep Resolution GPIO Pins
-GPIO.setup(MODE, GPIO.OUT)
-RESOLUTION = {'Full': (0, 0, 0),
-              'Half': (1, 0, 0),
-              '1/4': (0, 1, 0),
-              '1/8': (1, 1, 0),
-              '1/16': (0, 0, 1),
-              '1/32': (1, 0, 1)}
+# Set up GPIO pins
+GPIO.setup(STEP_PIN, GPIO.OUT)
+GPIO.setup(DIR_PIN, GPIO.OUT)
+GPIO.setup(ENABLE_PIN, GPIO.OUT)
 
-GPIO.output(MODE, RESOLUTION['1/8'])
+# Function to move the stepper motor
+def move_stepper(steps, direction, delay):
+    # Set the direction
+    GPIO.output(DIR_PIN, direction)
+    
+    # Enable the motor
+    GPIO.output(ENABLE_PIN, GPIO.LOW)
+    
+    # Step the motor
+    for _ in range(steps):
+        GPIO.output(STEP_PIN, GPIO.HIGH)
+        time.sleep(delay)
+        GPIO.output(STEP_PIN, GPIO.LOW)
+        time.sleep(delay)
+    
+    # Disable the motor
+    GPIO.output(ENABLE_PIN, GPIO.HIGH)
 
-step_count = SPR * 9
-delay = .005 / 24
+try:
+    # Move the stepper motor 200 steps clockwise with a delay of 0.005 seconds
+    move_stepper(200, GPIO.HIGH, 0.005)
+    
+    # Pause for 1 second
+    time.sleep(1)
+    
+    # Move the stepper motor 200 steps counterclockwise with a delay of 0.005 seconds
+    move_stepper(200, GPIO.LOW, 0.005)
 
-counter = 0
-
-while counter < 20:
-    GPIO.output(DIR, CW)
-    sleep(.5)
-
-    for x in range(step_count):
-        GPIO.output(STEP, GPIO.HIGH)
-        sleep(delay)
-        GPIO.output(STEP, GPIO.LOW)
-        sleep(delay)
-
-    GPIO.output(DIR, CCW)
-    sleep(.5)
-
-    for x in range(step_count):
-        GPIO.output(STEP, GPIO.HIGH)
-        sleep(delay)
-        GPIO.output(STEP, GPIO.LOW)
-        sleep(delay)
-
-    counter = counter + 1
+except KeyboardInterrupt:
+    # Clean up GPIO on keyboard interrupt
+    GPIO.cleanup()
