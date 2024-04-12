@@ -10,12 +10,16 @@ import pygame.locals as pgl
 from math import pi
 import platform
 import json
+import sound
 
 odrv_enable = True
+sound_enable = True
 done = False
 white = (255,255,255)
 amber = (255,141,51)
 pos_r2d2 = (320,100)
+
+sounds = sound(True)
 
 buttons = json.load(open("joysticks/ps4_keys.json"))
 
@@ -137,12 +141,15 @@ try:
             elif event.type == pygame.JOYBUTTONDOWN:
                 if joystick.get_button(cro): # X Button
                     draw_button(470,195,0)
+                    sound.play_sound("happy")
                 
                 if joystick.get_button(cir): # O Button
                     draw_button(500,160,1)
+                    sound.play_sound("emote")
                 
                 if joystick.get_button(squ): # Square
                     draw_button(430,160,2)
+                    sound.play_sound("gen")
 
                 if joystick.get_button(tri): # Triangle
                     draw_button(465,125,3)
