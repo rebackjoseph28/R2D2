@@ -1,7 +1,7 @@
 import pygame
 import random
 
-class sounds:
+class Sounds:
     pygame.mixer.init()
     sound_enable = True
     dir = "sounds/"
@@ -66,18 +66,18 @@ class sounds:
     }
 
     def __init__(sound_enable):
-        sounds.sound_enable = sound_enable
+        Sounds.sound_enable = sound_enable
 
     def play_sound(type):
         if type == "gen":
             n = random.randrange(1,9)
-            sound = sounds.gen_dict[n]
+            sound = Sounds.gen_dict[n]
         elif type == "emote":
             n = random.randrange(1,7)
-            sound = sounds.emote_dict[n]
+            sound = Sounds.emote_dict[n]
         elif type == "happy":
             n = random.randrange(1,6)
-            sound = sounds.happy_dict[n]
+            sound = Sounds.happy_dict[n]
         elif type == "chat":
             pass
         elif type == "help":
