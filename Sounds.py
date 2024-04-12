@@ -33,6 +33,19 @@ class Sounds:
     happy6 = pygame.mixer.Sound(dir + "happy6" + ext)
     happy7 = pygame.mixer.Sound(dir + "happy7" + ext)
 
+    chat1 = pygame.mixer.Sound(dir + "chat1" + ext)
+    chat2 = pygame.mixer.Sound(dir + "chat2" + ext)
+    chat3 = pygame.mixer.Sound(dir + "chat3" + ext)
+    chat4 = pygame.mixer.Sound(dir + "chat4" + ext)
+    chat5 = pygame.mixer.Sound(dir + "chat5" + ext)
+    chat6 = pygame.mixer.Sound(dir + "chat6" + ext)
+    chat7 = pygame.mixer.Sound(dir + "chat7" + ext)
+    chat8 = pygame.mixer.Sound(dir + "chat8" + ext)
+    chat9 = pygame.mixer.Sound(dir + "chat9" + ext)
+
+    help = pygame.mixer.Sound(dir + "help" + ext)
+    scream = pygame.mixer.Sound(dir + "scream" + ext)
+
     gen_dict = {
         1 : gen1,
         2 : gen2,
@@ -65,6 +78,23 @@ class Sounds:
         7 : happy7
     }
 
+    chat_dict = {
+        1 : chat1,
+        2 : chat2,
+        3 : chat3,
+        4 : chat4,
+        5 : chat5,
+        6 : chat6,
+        7 : chat7,
+        8 : chat8,
+        9 : chat9
+    }
+
+    other_dict = {
+        "scream" : scream,
+        "help" : help
+    }
+
     def __init__(sound_enable):
         Sounds.sound_enable = sound_enable
 
@@ -79,9 +109,10 @@ class Sounds:
             n = random.randrange(1,6)
             sound = Sounds.happy_dict[n]
         elif type == "chat":
-            pass
+            n = random.randrange(1,9)
+            sound = Sounds.chat_dict[n]
         elif type == "help":
-            pass
+            sound = Sounds.other_dict[type]
         elif type == "scream":
-            pass
+            sound = Sounds.other_dict[type]
         pygame.mixer.Sound.play(sound)
