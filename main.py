@@ -11,8 +11,9 @@ from math import pi
 import platform
 import json
 from Sounds import Sounds
+from Motor import Motor
 
-odrv_enable = False
+odrv_enable = True
 sound_enable = True
 done = False
 white = (255,255,255)
@@ -109,9 +110,9 @@ def clear_field():
 def move_axis(input,axis):
     if odrv_enable:
         if axis == 0:
-            odrv.axis0.controller.input_vel = -1.5*input
+            odrv.axis0.controller.input_vel = -1.0*input
         if axis == 1:
-            odrv.axis1.controller.input_vel = -1.5*input
+            odrv.axis1.controller.input_vel = -1.0*input
         if axis == 2:
              odrv.axis0.controller.input_vel = 0.0
         if axis == 3:
@@ -137,6 +138,8 @@ try:
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True
             elif event.type == pygame.JOYBUTTONDOWN:
+                dpad = joystick.get_hat(0)
+                
                 if joystick.get_button(cro): # X Button
                     draw_button(470,195,0)
                     Sounds.play_sound("happy")
@@ -151,11 +154,13 @@ try:
 
                 if joystick.get_button(tri): # Triangle
                     draw_button(465,125,3)
+                    Sounds.play_sound("scream")
+                    joystick.rumble(10,100,100)
 
-                if joystick.get_button(l1): # Rotate Head Left
+                if joystick.get_button(4)  : # Rotate Head Left
                     draw_button(130,80,9)
 
-                if joystick.get_button(r1): # Rotate Head Right
+                if joystick.get_button(5): # Rotate Head Right
                     draw_button(450,80,10)
 
                 if joystick.get_button(ps): # PS Button
@@ -169,24 +174,35 @@ try:
                     move_axis(-analog_keys[laxis1],1)
                 elif abs(analog_keys[laxis1]) < 0.2:
                     move_axis(-analog_keys[laxis1],3)
-                    pygame.draw.ellipse(screen,"black", (195,210,80,80))
+                    #pygame.draw.ellipse(screen,"black", (195,210,80,80))
     
                 # Move Right Motor (Right Stick)
                 if abs(analog_keys[raxis1]) > 0.2:
                     move_axis(analog_keys[raxis1],0)
                 elif abs(analog_keys[raxis1]) < 0.2:
                     move_axis(analog_keys[raxis1],2)
-                    pygame.draw.ellipse(screen,"black", (360,210,80,80))
+                    #pygame.draw.ellipse(screen,"black", (360,210,80,80))
+
+                if abs(analog_keys[2]) > 1.0:
+                    Motor.move_stepper(5,1,0.005)
+                elif abs(analog_keys[2]) < 1.0:
+                    Motor.disable_motor()
+                elif abs(analog_keys[5]) > 1.0:
+                    Motor.move_stepper(5,0,0.005)
+                elif abs(analog_keys[5]) < 1.0:
+                    Motor.disable_motor()
 
             if event.type == pygame.JOYBUTTONUP:
                 clear_field()
         
         #Drawing the joysticks
-        draw_joypad(210,225,(analog_keys[laxis0],analog_keys[laxis1]))
-        draw_joypad(375,225,(analog_keys[raxis0],analog_keys[raxis1]))
+        #draw_joypad(210,225,(analog_keys[laxis0],analog_keys[laxis1]))
+        #draw_joypad(375,225,(analog_keys[raxis0],analog_keys[raxis1]))
         pygame.display.flip()
 
 except KeyboardInterrupt:
     print("EXITING NOW")
     joystick.quit()
 
+Motor.disable_motor()
+Motor.cleanup()
